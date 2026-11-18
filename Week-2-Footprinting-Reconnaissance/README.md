@@ -1,398 +1,303 @@
 # PENETRATION TESTING REPORT
+
 ## Week 2: Footprinting, Reconnaissance & Network Scanning
 
-**Project:** Network Security Assessment  
-**Target Domain:** `networkwalks.com`  
-**Assessment Date:** 18 November 2026  
-**Environment:** Kali Linux and Windows 11  
-**Network Scanning Tool:** Zenmap / Nmap
+**Student Name:** Aditi Pashte 
+**Operating System:** Windows 11  
+**Virtualization Environment:** Oracle VirtualBox  
+**Date of Lab Work:** 18–19 November 2026
 
 ---
 
 ## 1. Liability Disclaimer
 
-This report has been prepared for educational and cybersecurity learning purposes. It documents the tool outputs and observations collected during the assessment.
+This report is prepared for educational and cybersecurity lab practice purposes only.
 
-The domain-related findings are based on the outputs supplied by the learner. The previous authorization letter shared for this project was valid from 17 August 2026 to 24 August 2026. It does not establish authorization for testing performed on 18 November 2026. No claim of current authorization is made in this report.
+All network scanning activities described for the local network were performed on the student's own network environment.
 
-The network scan was performed against the learner's own mobile hotspot network.
+The website reconnaissance results are documented as observations from the commands executed during the lab. This report does not claim current authorization to test the external website. Any further active testing must be performed only with valid written permission from the website owner.
 
-No exploitation, brute-force attacks, password attacks, or unauthorized access to systems or data are documented in this report. Findings are limited to the evidence collected. Technology detection does not automatically confirm a vulnerability.
-
----
+No exploitation, brute-force attacks, or unauthorized access attempts are included in this report.
 
 ## 2. Introduction
 
-Footprinting and reconnaissance are important initial phases of a penetration testing process. They help identify publicly available information about a domain, its DNS configuration, web technologies, server details, and security-related infrastructure.
+The objective of this lab was to understand the basic concepts of penetration testing, footprinting, reconnaissance, and network scanning.
 
-The objective of this project was to practice reconnaissance tools and understand basic network discovery using Zenmap.
+The practical exercises involved collecting publicly observable domain information, identifying web technologies, examining DNS records, checking web security mechanisms, and discovering live hosts on a local network using Zenmap.
 
-The assessment activities included:
-
-- Collecting domain registration information using WHOIS.
-- Identifying DNS records using nslookup and DNSRecon.
-- Detecting website technologies using WhatWeb.
-- Reviewing HTTP response headers using curl.
-- Identifying the Web Application Firewall using WAFW00F.
-- Discovering live hosts on the learner's own local network using Zenmap.
-
-**Target domain:** `networkwalks.com`
-
-**Resolved IP address:** `192.232.216.135`
-
----
+The lab also included a localhost TCP scan to understand how Nmap identifies open and filtered ports on a Windows computer.
 
 ## 3. Tools Used
 
 | Tool | Purpose |
 |---|---|
-| WHOIS | Collecting domain registration information |
-| nslookup | Resolving domain names to IP addresses |
-| WhatWeb | Identifying website technologies |
-| curl | Reviewing HTTP response headers |
-| WAFW00F | Detecting Web Application Firewalls |
-| DNSRecon | Enumerating DNS records |
-| Zenmap | Visual network scanning interface |
-| Nmap | Discovering live hosts on a network |
-| Kali Linux | Reconnaissance and security testing environment |
-| Windows 11 | Local network configuration and scanning environment |
-
-### Tool Versions
-
-| Tool | Version |
-|---|---|
-| WHOIS | 5.6.6 |
-| WhatWeb | 0.6.4 |
-| nslookup | 9.20.27-2 |
-| WAFW00F | 2.4.2 |
-| DNSRecon | 1.6.0 |
-| Nmap | 7.70 |
-
----
+| WHOIS | Domain registration information |
+| WhatWeb | Website technology identification |
+| nslookup | DNS lookup |
+| curl | HTTP response header inspection |
+| WAFW00F | Web Application Firewall detection |
+| DNSRecon | DNS record enumeration |
+| Nmap | Network scanning |
+| Zenmap | Graphical network scanning |
+| Command Prompt | Network configuration and commands |
 
 ## 4. Activities Performed
 
 ### 4.1 Footprinting & Reconnaissance
 
-#### A. WHOIS Lookup
+The following commands were used to collect domain and website information.
 
-**Command used:**
+**A. WHOIS Lookup**
+
+Command:
 
 ```bash
 whois networkwalks.com
 ```
 
-**Findings:**
+Observations:
 
-| Detail | Result |
-|---|---|
-| Domain Name | networkwalks.com |
-| Registrar | GoDaddy.com, LLC |
-| Creation Date | 06 November 2019 |
-| Updated Date | 12 November 2025 |
-| Expiry Date | 06 November 2027 |
-| Registrar IANA ID | 146 |
-| WHOIS Server | whois.godaddy.com |
-| DNSSEC | Unsigned |
-| Registrant Privacy | Domains By Proxy, LLC |
+- Domain: networkwalks.com
+- Registrar: GoDaddy.com, LLC
+- Creation Date: 06 November 2019
+- Expiry Date: 06 November 2027
+- Domain privacy protection: Domains By Proxy, LLC.
+- DNSSEC: Unsigned
+- Nameserver information included HostGator nameservers in the WHOIS output.
 
-**Name servers observed:**
+**B. WhatWeb Scan**
 
-- NS6135.HOSTGATOR.COM
-- NS6136.HOSTGATOR.COM
-- NS29.DOMAINCONTROL.COM
-- NS30.DOMAINCONTROL.COM
-
-**Observation:**
-
-The WHOIS lookup provided domain registration details, registrar information, registration dates, name servers, and DNSSEC status. Registrant information was privacy-protected.
-
-#### B. DNS Lookup Using nslookup
-
-**Command used:**
-
-```bash
-nslookup networkwalks.com
-```
-
-**Findings:**
-
-| Detail | Result |
-|---|---|
-| DNS Server | 8.8.8.8 |
-| DNS Server Address | 8.8.8.8 |
-| Domain | networkwalks.com |
-| Resolved IP | 192.232.216.135 |
-| Response Type | Non-authoritative answer |
-
-**Observation:**
-
-The DNS lookup successfully resolved the domain name to `192.232.216.135`. This IP address matched the address identified by WhatWeb.
-
-#### C. Website Technology Detection Using WhatWeb
-
-**Command used:**
+Command:
 
 ```bash
 whatweb networkwalks.com
 ```
 
-**Findings:**
+Observations:
 
-| Detail | Result |
-|---|---|
-| Domain IP | 192.232.216.135 |
-| HTTP Status | 301 Moved Permanently |
-| HTTPS Status | 200 OK |
-| Web Server | Apache |
-| CMS | WordPress 7.1.4 |
-| WordPress Download Manager | 3.3.77 |
-| Bootstrap | 7.1.4 |
-| jQuery | 3.7.1 |
-| Page Title | Networkwalks Academy |
-| Detected Email | info@networkwalks.com |
-| Country Detected | United States |
+- Website redirected from HTTP to HTTPS.
+- HTTPS response: 200 OK
+- Web server identified as Apache.
+- Website title: Networkwalks Academy
+- WordPress detected.
+- Bootstrap detected.
+- jQuery version: 3.7.1
+- Google Tag Manager detected.
+- WP Download Manager detected.
 
-**Observation:**
+**C. DNS Lookup**
 
-WhatWeb detected Apache as the web server and WordPress as the content management system. The HTTP request redirected to HTTPS, which returned a successful response.
+Command:
 
-These are technology fingerprints detected by WhatWeb. They do not independently confirm that any component is vulnerable.
+```bash
+nslookup networkwalks.com
+```
 
-#### D. HTTP Header Analysis Using curl
+Observations:
 
-**Command used:**
+- DNS Server: 8.8.8.8
+- Domain resolved to IP address: 192.232.216.135
+- Response was non-authoritative.
+
+**D. HTTP Header Inspection**
+
+Command as executed:
 
 ```bash
 curl -I https:///networkwalks.com
 ```
 
-**Findings:**
+Observations:
 
-| Header / Detail | Result |
-|---|---|
-| HTTP Status | 200 OK |
-| Server | Apache |
-| Content-Type | text/html; charset=UTF-8 |
-| Referrer-Policy | no-referrer-when-downgrade |
-| Cache Header | X-nginx-cache: WordPress |
-| WordPress API | /wp-json/ |
-| Cookie | __wpdm_client |
-| Cookie Attributes | Secure, HttpOnly |
+- HTTP response: 200 OK
+- Web server: Apache
+- Content type: text/html; charset=UTF-8
+- HTTP response headers included security-related policy information.
+- A cookie was observed with Secure and HttpOnly attributes.
 
-**Observation:**
+Note: The command was entered with three slashes after `https:`. The output is recorded as received.
 
-The server returned an HTTP 200 OK response. The response headers exposed server information, WordPress REST API references, caching information, and cookie security attributes.
+**E. WAF Detection**
 
-**Note:** The command was recorded exactly as supplied. The URL contains three slashes after `https:`. The result is documented as observed and should not be treated as a separate HTTPS configuration test.
-
-#### E. Web Application Firewall Detection Using WAFW00F
-
-**Command used:**
+Command:
 
 ```bash
 wafw00f networkwalks.com
 ```
 
-**Findings:**
+Observations:
 
-| Detail | Result |
-|---|---|
-| Tool | WAFW00F 2.4.2 |
-| Target | https://networkwalks.com |
-| WAF Detected | ModSecurity |
-| Provider | SpiderLabs |
-| Number of Requests | 2 |
+- WAFW00F version: 2.4.2
+- Detected Web Application Firewall: ModSecurity (SpiderLabs)
+- Two HTTP requests were made during detection.
 
-**Observation:**
+**F. DNS Enumeration**
 
-WAFW00F identified ModSecurity (SpiderLabs) as the Web Application Firewall protecting the website. This indicates that a web traffic filtering layer was detected.
-
-#### F. DNS Enumeration Using DNSRecon
-
-**Command used:**
+Command:
 
 ```bash
 dnsrecon -d networkwalks.com
 ```
 
-**Findings:**
+Observations:
 
-| Record Type | Result |
-|---|---|
-| SOA | ns6135.hostgator.com |
-| SOA IP | 50.87.144.87 |
-| NS | ns6135.hostgator.com |
-| NS IP | 50.87.144.87 |
-| NS | ns6136.hostgator.com |
-| NS IP | 192.232.216.131 |
-| MX | mail.networkwalks.com |
-| MX IP | 192.232.216.135 |
-| A | 192.232.216.135 |
+- SOA record identified.
+- Nameserver records identified.
+- A record resolved to 192.232.216.135.
+- MX record identified as mail.networkwalks.com.
+- SPF TXT record was found.
+- Google site verification TXT record was found.
+- SRV records for email autodiscovery were identified.
+- DNSSEC query returned no answer.
 
-**Additional DNS information:**
-
-- DNS server version information was returned as `9.16.50-RH` for the two observed name server IPs.
-- An SPF TXT record was detected.
-- A Google site verification TXT record was detected.
-- Eight SRV records were found for `_autodiscover._tcp.networkwalks.com`.
-- The DNSSEC query returned an error: `No answer for DNSSEC query`.
-
-**Observation:**
-
-DNSRecon successfully identified SOA, NS, MX, A, TXT, and SRV records. The DNSSEC query did not return an answer, which is consistent with the unsigned DNSSEC status observed in WHOIS.
-
----
+DNSRecon reported 8 records found.
 
 ### 4.2 Network Scanning with Zenmap
 
-The local network discovery exercise was performed using the learner's own mobile hotspot network.
+The local network was scanned using Zenmap on Windows 11.
 
-#### A. Windows IP Configuration
+**A. Finding Local IP Address**
 
-**Command used:**
+Command:
 
 ```cmd
 ipconfig
 ```
 
-**Findings:**
+Network details:
 
-| Detail | Result |
+| Parameter | Value |
 |---|---|
+| Active Adapter | Intel Wi-Fi 6 AX203 |
 | IPv4 Address | 192.168.43.216 |
 | Subnet Mask | 255.255.255.0 |
 | Default Gateway | 192.168.43.1 |
 | Network Range | 192.168.43.0/24 |
 
-#### B. Zenmap Ping Scan
+**B. Ping Scan Using Zenmap**
 
-**Target entered:**
+Target:
 
 ```text
 192.168.43.0/24
 ```
 
-**Profile selected:** Ping scan
+Scan Profile: Ping Scan
 
-**Nmap command equivalent:**
+The scan identified two live hosts on the local network.
 
-```bash
-nmap -sn 192.168.43.0/24
+Results:
+
+| IP Address | Host Status |
+|---|---|
+| 192.168.43.1 | Up |
+| 192.168.43.216 | Up |
+
+Total IP addresses scanned: 256  
+Live hosts found: 2  
+Scan duration: 2.68 seconds
+
+The scan was used to identify live hosts. It did not perform a port or service scan.
+
+**C. MAC Address Identification**
+
+The Zenmap output identified the gateway MAC address. The laptop's MAC address was obtained using:
+
+```cmd
+ipconfig /all
 ```
 
-**Scan findings:**
+Results:
 
-| Detail | Result |
-|---|---|
-| Network Range | 192.168.43.0/24 |
-| Total IP Addresses Scanned | 256 |
-| Hosts Reported Up | 2 |
-| Scan Duration | 2.68 seconds |
-| Nmap Version | 7.70 |
+| Device | IP Address | MAC Address |
+|---|---|---|
+| Gateway | 192.168.43.1 | 22:50:C4:84:35:3F |
+| Laptop | 192.168.43.216 | 90-10-57-41-39-67 |
 
-**Discovered hosts:**
+**D. Network Topology**
 
-| IP Address | Hostname | MAC Address | Status |
-|---|---|---|---|
-| 192.168.43.1 | Hotspot gateway | 22:50:C4:84:35:3F | Up |
-| 192.168.43.216 | host.docker.internal | Not displayed | Up |
+The Zenmap Topology tab was used to view the network topology.
 
-**Observation:**
+The topology graphic was saved in PDF format as required by the lab instructions.
 
-The Zenmap ping scan discovered two live hosts in the selected network range. The first was the mobile hotspot gateway. The second was listed by Nmap as `host.docker.internal`.
+**E. Additional Localhost TCP Scan**
 
-The scan was a host discovery scan. It did not perform a port or service vulnerability assessment.
+An additional scan was performed on the local Windows computer.
 
----
+Command:
+
+```cmd
+nmap -sT 127.0.0.1
+```
+
+Results:
+
+- Target: 127.0.0.1
+- Host status: Up
+- Open ports: 135/tcp and 445/tcp
+- Filtered ports: 998
+- Nmap version: 7.70
+- Scan duration: 47.58 seconds
+
+Open ports identified:
+
+| Port | State | Service |
+|---|---|---|
+| 135/tcp | Open | MSRPC |
+| 445/tcp | Open | Microsoft-DS |
+
+This was an additional localhost scan and was separate from the Zenmap ping scan.
 
 ## 5. Risk Analysis / Impact
 
-The following observations are based only on the collected reconnaissance output. They are not confirmed vulnerabilities.
+The following observations were recorded during the lab.
 
-| Finding | Potential Impact | Risk Level |
+| Observation | Risk Level | Explanation |
 |---|---|---|
-| Public domain registration information | Provides basic information about domain ownership and infrastructure | Low |
-| Web server and CMS identification | Helps an attacker understand the website technology stack | Low |
-| DNS records publicly discoverable | Reveals domain infrastructure and mail-related configuration | Low |
-| DNS server version information returned | May reveal additional infrastructure details | Low |
-| WordPress REST API reference exposed | Reveals the presence of a standard WordPress API endpoint | Informational |
-| ModSecurity detected | Indicates an existing web traffic filtering layer | Positive security observation |
-| DNSSEC reported as unsigned | DNS responses do not have DNSSEC validation protection through this domain configuration | Medium |
-| Local network hosts discovered | Provides visibility into devices responding on the local network | Informational |
+| DNSSEC unsigned | Informational | DNSSEC was not enabled according to the observed lookup results. This alone does not prove a vulnerability. |
+| ModSecurity detected | Positive Security Control | A web application firewall was detected. |
+| HTTP to HTTPS redirect | Positive Security Control | The website redirected HTTP traffic to HTTPS. |
+| Ports 135 and 445 open on localhost | Informational | Windows RPC and SMB-related services were listening locally. Their exposure to other networks was not tested. |
+| Two live local network hosts | Informational | Two hosts responded to the ping scan. |
 
-**Risk Assessment Notes:**
-
-- No exploitation was performed.
-- No unauthorized access was attempted.
-- No open ports or vulnerable services were established by the Zenmap ping scan.
-- Technology version detection alone does not confirm outdated or vulnerable software.
-- The DNSSEC observation is a configuration consideration, not proof of an active attack.
-
----
+No exploitation or vulnerability validation was performed. Therefore, these observations should not be treated as confirmed exploitable vulnerabilities.
 
 ## 6. Recommendations
 
-1. Review domain DNS configuration and consider enabling DNSSEC where supported.
-2. Keep WordPress, plugins, themes, and server software updated.
-3. Review publicly exposed HTTP response headers and disclose only information necessary for normal operation.
-4. Continue using a properly configured Web Application Firewall.
-5. Review DNS records periodically and remove records that are no longer required.
-6. Maintain secure cookie attributes such as Secure and HttpOnly where appropriate.
-7. Monitor domain and DNS configuration changes.
-8. Perform future security assessments only with valid written authorization and a clearly defined scope.
-
----
+1. Consider enabling DNSSEC where supported and properly configured.
+2. Keep WordPress, plugins, themes, and web server software updated.
+3. Review firewall rules and restrict access to Windows services such as ports 135 and 445 where appropriate.
+4. Continue using HTTPS for website communication.
+5. Maintain and regularly review web application firewall rules.
+6. Monitor DNS records and domain registration information.
+7. Perform security assessments only with valid written authorization.
 
 ## 7. Conclusion
 
-The Week 2 project provided practical experience with footprinting, reconnaissance, DNS enumeration, web technology identification, HTTP header analysis, WAF detection, and local network discovery.
+This lab provided practical experience with footprinting, reconnaissance, DNS enumeration, website technology identification, and network scanning.
 
-WHOIS provided domain registration information. nslookup and DNSRecon identified DNS information and records. WhatWeb detected the website technology stack, while curl provided HTTP response headers. WAFW00F identified ModSecurity as the detected Web Application Firewall.
+WHOIS, WhatWeb, nslookup, curl, WAFW00F, and DNSRecon were used to collect domain and website information.
 
-The Zenmap ping scan of the learner's own local network identified two live hosts out of 256 scanned IP addresses.
+Zenmap was used to scan the local network and identify two live hosts. The IP addresses and MAC addresses were recorded, and the network topology was saved in PDF format.
 
-Overall, the exercise helped develop an understanding of how reconnaissance tools collect publicly available information and how network discovery can be performed in a controlled environment.
+An additional Nmap TCP scan was also performed on localhost, identifying two open ports and 998 filtered ports.
 
-No confirmed exploitable vulnerability was established by the collected evidence.
-
----
+Overall, the lab helped develop an understanding of basic network reconnaissance and scanning techniques.
 
 ## 8. Evidences Collected
 
-The following screenshots should be placed inside the `Screenshots` folder.
+The following evidence files should be placed in the `Screenshots` folder or `Report` folder as appropriate.
 
-| No. | Evidence | Suggested File Name |
-|---|---|---|
-| 1 | WHOIS lookup output | whois.png |
-| 2 | WhatWeb output | whatweb.png |
-| 3 | nslookup output | nslookup.png |
-| 4 | curl HTTP headers | curl-headers.png |
-| 5 | WAFW00F output | wafw00f.png |
-| 6 | DNSRecon output | dnsrecon.png |
-| 7 | Windows IP configuration | ipconfig.png |
-| 8 | Zenmap scan result | Week2-Zenmap-Scan-Result.png |
-| 9 | Zenmap network topology | Week2-Zenmap-Topology.png |
-
-**Evidence Directory:**
-
-```text
-Week-2-Penetration-Testing-Report/
-│
-├── README.md
-│
-├── Report/
-│
-└── Screenshots/
-    ├── whois.png
-    ├── whatweb.png
-    ├── nslookup.png
-    ├── curl-headers.png
-    ├── wafw00f.png
-    ├── dnsrecon.png
-    ├── ipconfig.png
-    ├── Week2-Zenmap-Scan-Result.png
-    └── Week2-Zenmap-Topology.png
-```
+| Evidence | Description |
+|---|---|
+| Week2-Zenmap-Topology.png | Zenmap network topology screenshot |
+| Week2-Zenmap-Scan-Result.png | Zenmap ping scan results |
+| Topology PDF | Saved network topology in PDF format |
+| WHOIS Screenshot | Domain registration information |
+| WhatWeb Screenshot | Website technology detection |
+| DNSRecon Screenshot | DNS enumeration results |
+| WAFW00F Screenshot | WAF detection result |
+| Nmap Localhost Screenshot | Additional localhost TCP scan |
+| ipconfig-all Screenshot | Local adapter and MAC address information |
 
 **End of Report**
