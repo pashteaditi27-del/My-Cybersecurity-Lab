@@ -34,18 +34,18 @@ This project documents the setup of a cybersecurity lab using Oracle VirtualBox 
 8. Created a VirtualBox snapshot named `Week 1 - Kali Setup`.
 
 ### Verification Commands
+
 Check IP address:
 
 ```bash
 ip -4 addr
+```
 
-<divider color="subtle"/>
-**Internet connectivity command**
-```markdown
 Test internet connectivity:
 
 ```bash
 ping -c 4 google.com
+```
 
 ### Screenshots
 
